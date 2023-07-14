@@ -2,12 +2,42 @@
 
 
 import argparse, logging
+import lief
+
 
 logger = logging.getLogger('Logger')                
 logger.setLevel(logging.INFO)
 
-def main(binary, function, libraries):
-    logger.debug("Binary: {} Function: {} Library path: {}".format(binary, function, libraries))
+def parsepath(pathlibraries):
+    if pathlibraries[-1] == "/":
+        return pathlibraries
+    return "{}/".format(pathlibraries)
+
+def findfunction(lieflibraries, function, pathlibraries):
+    logger.info("Looking for the function \"{}\" in {}".format(function, pathlibraries))
+    for l in lieflibraries:
+        try:
+            logger.debug("Opening: {}{}".format(pathlibraries, l))
+            lieflib = lief.parse("{}{}".format(pathlibraries, l))
+            lfunctions = [f.name for f in lieflib.imported_functions]
+            logger.debug("Functions: {}".format(','.join(lfunctions)))
+            if function in lfunctions:
+                print("Found \"{}\" in \"{}\"".format(function, l))
+        except:
+            logger.warning("{}{} is not a valid library".format(pathlibraries, l))
+        
+
+def main(pathbinary, function, pathlibraries):
+    logger.debug("Binary: {} Function: {} Library path: {}".format(pathbinary, function, pathlibraries))
+    logger.info("Extracting dipendencies from the binary")
+    try:
+        liefbinary = lief.parse(pathbinary)
+        lieflibraries = liefbinary.libraries
+    except:
+        logger.error("The Binary {} is not a valid file".format(pathbinary))
+        exit(0)
+    logger.debug("libraries list: {}".format(','.join([l for l in lieflibraries])))
+    findfunction(lieflibraries,function.lower(), parsepath(pathlibraries))
 
 if __name__ == "__main__":
     handler = logging.StreamHandler()
