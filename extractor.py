@@ -3,6 +3,7 @@
 
 import argparse, logging
 import lief
+import re
 
 
 logger = logging.getLogger('Logger')                
@@ -21,11 +22,11 @@ def findfunction(lieflibraries, function, pathlibraries):
             lieflib = lief.parse("{}{}".format(pathlibraries, l))
             lfunctions = [f.name for f in lieflib.imported_functions]
             logger.debug("Functions: {}".format(','.join(lfunctions)))
-            if function in lfunctions:
-                print("Found \"{}\" in \"{}\"".format(function, l))
         except:
             logger.warning("{}{} is not a valid library".format(pathlibraries, l))
-        
+        for f in lfunctions:
+            if re.search(function,f):
+                print("Found \"{}\" in \"{}\"".format(f, l))       
 
 def main(pathbinary, function, pathlibraries):
     logger.debug("Binary: {} Function: {} Library path: {}".format(pathbinary, function, pathlibraries))
@@ -37,7 +38,7 @@ def main(pathbinary, function, pathlibraries):
         logger.error("The Binary {} is not a valid file".format(pathbinary))
         exit(0)
     logger.debug("libraries list: {}".format(','.join([l for l in lieflibraries])))
-    findfunction(lieflibraries,function.lower(), parsepath(pathlibraries))
+    findfunction(lieflibraries,function, parsepath(pathlibraries))
 
 if __name__ == "__main__":
     handler = logging.StreamHandler()
