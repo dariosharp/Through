@@ -37,6 +37,6 @@ if __name__ == "__main__":
         if args.verbosity:
             logger.setLevel(logging.DEBUG)
         logger.addHandler(handler)
-        main(args.binary,args.function, args.libraries)
+        main(args.binary,args.function, args.libraries, None)
 
 
