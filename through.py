@@ -3,39 +3,26 @@
 
 import argparse, logging
 import lief
-import re
 import platform
-
+from fingfunctioninlib import FindFunctionInLibs
 
 logger = logging.getLogger('Logger')                
 logger.setLevel(logging.INFO)
 
-
-class Looking4Function:
-    def __init__(self, function, plib):
+class Through:
+    def __init__(self, pathbinary, function, pathlibraries, pathida):
+        self.binary = lief.parse(pathbinary)
         self.function = function
-        lib = lief.parse(plib)
-        self.listFunctions = [f.name for f in lib.imported_functions]
-    def __iter__(self):
-        return self
-    def __next__(self):
-        for index, f in enumerate(self.listFunctions):
-            if re.search(self.function,f):
-                self.listFunctions = self.listFunctions[index+1:]
-                return f
-        raise StopIteration
+        parsedpathlibraries = parsepath(pathlibraries)
+        self.libraries = ["{}{}".format(parsedpathlibraries,l) for l in self.binary.libraries]
+        self.pathida = pathida
+    def getLibs(self):
+        return [l for list_per_lib in FindFunctionInLibs(self.libraries,self.function) for f,l in list_per_lib]
+    def getFunctions(self):
+        return [f for list_per_lib in FindFunctionInLibs(self.libraries,self.function) for f,l in list_per_lib] 
+    def getFunctionPerLib(self):
+        return [(f,l) for list_per_lib in FindFunctionInLibs(self.libraries,self.function) for f,l in list_per_lib]
 
-class FindFunctionInLibs:
-    def __init__(self, libList, function):
-        self.libList = libList
-        self.function = function
-    def __iter__(self):
-        return self
-    def __next__(self):
-        for index, l in enumerate(self.libList):
-            self.libList = self.libList[index+1:]
-            return [(f, l) for f in Looking4Function(self.function, l)]
-        raise StopIteration
 
 def parsepath(pathlibraries):
     if platform.system() == "windows" and pathlibraries[-1] != "\\":
@@ -47,16 +34,9 @@ def parsepath(pathlibraries):
 def main(pathbinary, function, pathlibraries, ida):
     logger.debug("Binary: {} Function: {} Library path: {}".format(pathbinary, function, pathlibraries))
     logger.info("Extracting dipendencies from the binary")
-    try:
-        liefbinary = lief.parse(pathbinary)
-        lieflibraries = ["{}/{}".format(pathlibraries,l) for l in liefbinary.libraries]
-    except:
-        logger.error("The Binary {} is not a valid file".format(pathbinary))
-        exit(0)
-    logger.debug("libraries list: {}".format(','.join([l for l in lieflibraries])))
-    for data in FindFunctionInLibs(lieflibraries,function):
-        for f,l in data:
-            print("Found \"{}\" in \"{}\"".format(f, l))       
+    through = Through(pathbinary,function,pathlibraries,ida)
+    for f,l in through.getFunctionPerLib():
+        print("Found \"{}\" in \"{}\"".format(f, l))
 
 if __name__ == "__main__":
     handler = logging.StreamHandler()
@@ -73,4 +53,5 @@ if __name__ == "__main__":
         logger.setLevel(logging.DEBUG)
     logger.addHandler(handler)
     main(args.binary,args.function, args.libraries, args.ida or None)
+
 
