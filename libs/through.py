@@ -17,7 +17,7 @@ class Through:
     def getFunctionPerLib(self):
         return [(f,l) for list_per_lib in FindFunctionInLibs(self.libraries,self.function) for f,l in list_per_lib]
     def parsepath(self,pathlibraries):
-        if platform.system() == "windows" and pathlibraries[-1] != "\\":
+        if platform.system() == "Windows" and pathlibraries[-1] != "\\":
             return "{}\\".format(pathlibraries)
         if platform.system() == "Linux" and pathlibraries[-1] != "/":
             return "{}/".format(pathlibraries)
