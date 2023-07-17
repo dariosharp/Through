@@ -13,8 +13,8 @@ def main(pathbinary, function, pathlibraries, ida):
     logger.info("Extracting dipendencies from the binary")
     through = Through(pathbinary,function,pathlibraries,ida)
     for f,l in through.getFunctionPerLib():
-        print("Found \"{}\" in \"{}\"".format(f, l))
-
+        logger.info("Found \"{}\" in \"{}\"".format(f, l))
+    
 if __name__ == "__main__":
     handler = logging.StreamHandler()
     formatting = logging.Formatter('[%(levelname)s] %(message)s')

@@ -22,4 +22,6 @@ class Through:
         if platform.system() == "Linux" and pathlibraries[-1] != "/":
             return "{}/".format(pathlibraries)
         return pathlibraries
-
+    def idaalysis(self):
+        import idautils
+        pass
