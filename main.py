@@ -15,9 +15,6 @@ def main(pathbinary, function, pathlibraries, ida):
     for f,l in through.getFunctionPerLib():
         logger.info("Found \"{}\" in \"{}\"".format(f, l))
 
-def windowIDA():
-
-    return os.path.basename((idaapi.get_input_file_path())),"system","Libs"
 
 
 if __name__ == "__main__":
@@ -26,8 +23,10 @@ if __name__ == "__main__":
     handler.setFormatter(formatting)
     if platform.system() == "Windows":
         logger.addHandler(handler)
-        binary, function, libraries = windowIDA()
-        main(binary, function, libraries)
+        from libs.windowQT import windowIDA
+        wIDA = windowIDA()
+        binary, function, libraries, pathida = wIDA.getValues()
+        main(binary, function, libraries, pathida)
     if platform.system() == "Linux":
         parser = argparse.ArgumentParser(description='Through, finding vulnearbilities through libraries')
         parser.add_argument('-b', '--binary', type=str, help='Binary to analyze', required=True)
