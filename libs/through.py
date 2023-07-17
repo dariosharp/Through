@@ -1,6 +1,6 @@
 import lief
 import platform
-from fingfunctioninlib import FindFunctionInLibs
+from libs.findfunctioninlib import FindFunctionInLibs
 
 
 class Through:
