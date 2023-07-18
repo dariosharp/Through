@@ -1,4 +1,3 @@
-
 import idautils
 import idaapi
 

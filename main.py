@@ -12,9 +12,12 @@ def main(pathbinary, function, pathlibraries, ida):
     logger.debug("Binary: {} Function: {} Library path: {}".format(pathbinary, function, pathlibraries))
     logger.info("Extracting dipendencies from the binary")
     through = Through(pathbinary,function,pathlibraries,ida)
+    liblist = []
     for f,l in through.getFunctionPerLib():
+        liblist.append(l)
         logger.info("Found \"{}\" in \"{}\"".format(f, l))
-
+    if ida != None:
+        pass
 
 
 if __name__ == "__main__":
@@ -23,8 +26,8 @@ if __name__ == "__main__":
     handler.setFormatter(formatting)
     if platform.system() == "Windows":
         logger.addHandler(handler)
-        from libs.windowQT import windowIDA
-        wIDA = windowIDA()
+        from libs.windowQT import PathIDA
+        wIDA = PathIDA()
         binary, function, libraries, pathida = wIDA.getValues()
         main(binary, function, libraries, pathida)
     if platform.system() == "Linux":

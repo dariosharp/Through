@@ -23,5 +23,4 @@ class Through:
             return "{}/".format(pathlibraries)
         return pathlibraries
     def idaalysis(self):
-        import idautils
         pass
