@@ -2,13 +2,11 @@
 import idautils
 import idaapi
 
-class GetXref:
+class getXref:
     def __init__(self, address):
         if type(address) == str:
             address = idaapi.get_name_ea(0, address)
-        print(hex(address))
         self.xref = list(idautils.XrefsTo(self._getStartFunction(address)[1]))
-        print(self.xref)
     def _getStartFunction(self, address):
         function = idaapi.get_func(address)
         if function is None:
@@ -26,16 +24,21 @@ class GetXref:
             self.__next__()
         return x.frm, xstartaddr, xstartname
     
+class getExport:
+    def __init__(self, fname):
+        self.fname = fname
+        exported_function_count = idaapi.get_entry_qty()
+        self.addressExported = [ idaapi.get_entry_ordinal(exported) for exported in range(exported_function_count)]
+    def reachAnExport(self):
+        return self._reachAnExport(self.fname, [])
+    def _reachAnExport(self, aefunction, crossed_functions):
+        reachableExported = []
+        for address,xstartaddr,xstartname in getXref(aefunction):
+                if xstartaddr in self.addressExported:
+                    reachableExported =  reachableExported + [(xstartname, xstartaddr, address)]
+                return reachableExported + self._reachAnExport(xstartaddr, crossed_functions + [xstartname])
+        return reachableExported
 
-def reachAnExport(aefunction, addressExported, crossed_functions):
-    reachableExported = []
-    for address,xstartaddr,xstartname in GetXref(aefunction):
-            if xstartaddr in addressExported:
-                reachableExported =  reachableExported + [(xstartname, xstartaddr, address)]
-            return reachableExported + reachAnExport(xstartaddr, addressExported, crossed_functions + [xstartname])
-    return reachableExported
-
-def main():
-    exported_function_count = idaapi.get_entry_qty()
-    addressExported = [ idaapi.get_entry_ordinal(exported) for exported in range(exported_function_count)]
-    return reachAnExport("system",addressExported, [])
+if __name__ == '__main__':
+    e = getExport("system")
+    print(str(e.reachAnExport()))
