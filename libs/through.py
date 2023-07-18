@@ -24,3 +24,5 @@ class Through:
         return pathlibraries
     def idaalysis(self):
         pass
+    def genIDB(self, list):
+        pass

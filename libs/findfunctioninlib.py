@@ -22,7 +22,8 @@ class FindFunctionInLibs:
     def __iter__(self):
         return self
     def __next__(self):
-        for index, l in enumerate(self.libList):
-            self.libList = self.libList[index+1:]
-            return [(f, l) for f in Looking4Function(self.function, l)]
-        raise StopIteration
+        if self.libList == []:
+            raise StopIteration
+        lib = self.libList[0]
+        self.libList = self.libList[1:]
+        return [(f, lib) for f in Looking4Function(self.function, lib)]

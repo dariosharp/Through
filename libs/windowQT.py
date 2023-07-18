@@ -138,15 +138,12 @@ class SelectorIDA(QDialog):
         return r
     
 
-class selectLibsIDA:
+class SelectLibsIDA:
     def __init__(self, libs):
         self.list_selection = SelectorIDA(libs)
         self.list_selection.exec_()
     def getList(self):
         return self.list_selection.get_selected_elements()
-
-#s = selectLibsIDA(['a', 'v', 'g'])
-#print(str(s.getList()))
 
 
 

@@ -12,12 +12,19 @@ def main(pathbinary, function, pathlibraries, ida):
     logger.debug("Binary: {} Function: {} Library path: {}".format(pathbinary, function, pathlibraries))
     logger.info("Extracting dipendencies from the binary")
     through = Through(pathbinary,function,pathlibraries,ida)
-    liblist = []
+    libxfunction = []
     for f,l in through.getFunctionPerLib():
-        liblist.append(l)
+        libxfunction.append((f,l))
         logger.info("Found \"{}\" in \"{}\"".format(f, l))
+    listlibs = list(map(lambda x: x[1], libxfunction))
+    for l in listlibs:
+        logger.info("Unique \"{}\"".format(l))
     if ida != None:
-        pass
+        sli = SelectLibsIDA(listlibs)
+        selectedLibs = sli.getList()
+        for l in selectedLibs:
+            logger.info("Selected Lib to analyze: \"{}\"".format(l))
+        through.genIDB(selectedLibs)
 
 
 if __name__ == "__main__":
@@ -26,7 +33,7 @@ if __name__ == "__main__":
     handler.setFormatter(formatting)
     if platform.system() == "Windows":
         logger.addHandler(handler)
-        from libs.windowQT import PathIDA
+        from libs.windowQT import PathIDA, SelectLibsIDA
         wIDA = PathIDA()
         binary, function, libraries, pathida = wIDA.getValues()
         main(binary, function, libraries, pathida)
