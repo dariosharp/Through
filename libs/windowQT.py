@@ -1,11 +1,8 @@
-import os
-from PyQt5.QtCore import pyqtSignal, pyqtSlot
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QLineEdit, QHBoxLayout, QListWidget, QApplication, QWidget
-import idaapi
+import os, idaapi
+from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QLineEdit, QHBoxLayout, QListWidget
 
 class SetPaths(QDialog):
-    input_signal = pyqtSignal(list)
-    
     def __init__(self):
         super(SetPaths, self).__init__()
         self.setWindowTitle("Set Paths")
@@ -34,20 +31,17 @@ class SetPaths(QDialog):
         self.setLayout(layout)
     
     def on_button_clicked(self):
-        input_values = [field.text() for field in self.input_fields]
-        self.input_signal.emit(input_values)
+        self.input_values = [field.text() for field in self.input_fields]
         self.accept()
+
+    def getValues(self):
+        return self.input_values[0],self.input_values[1],self.input_values[2]
 
 class PathIDA:
     def __init__(self):
         dialog = SetPaths()
-        dialog.input_signal.connect(lambda values: setattr(SetPaths, 'function', values[0]))
-        dialog.input_signal.connect(lambda values: setattr(SetPaths, 'libs', values[1]))
-        dialog.input_signal.connect(lambda values: setattr(SetPaths, 'idapath', values[2]))
         dialog.exec_()
-        self.function = SetPaths.function
-        self.libs = SetPaths.libs
-        self.idapath = SetPaths.idapath
+        self.function, self.libs, self.idapath = dialog.getValues()
     def getValues(self):
         return os.path.basename((idaapi.get_input_file_path())), self.function, self.libs, self.idapath
 
