@@ -28,8 +28,12 @@ def main(pathbinary, function, pathlibraries, ida):
         if selectedLibs == []:
             logger.info("You have no selected any library")
             exit(0)
-        logger.info("IDB createtion.. it could take a while")
-        through.genIDB(selectedLibs)
+        for l in selectedLibs:
+            logger.info("IDB createtion for {}".format(l))
+            through.genIDB(l)
+        for l in selectedLibs:
+            logger.info("IDB analysis for {}".format(l))
+            through.execplugin("{}.idb".format(l), "getexportedbyfunction.py", function)
 
 
 if __name__ == "__main__":

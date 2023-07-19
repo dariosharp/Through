@@ -1,6 +1,5 @@
 import idautils
 import idaapi
-import sys
 
 class GetXref:
     def __init__(self, address):
@@ -45,8 +44,6 @@ class GetExport:
         return reachableExported
 
 if __name__ == '__main__':
-    e = GetExport(sys.argv[1])
-    print("***PLUGIN-OUTPUT-OPEN***")
+    e = GetExport("system")
     print(str(e.reachAnExport()))
-    print("***PLUGIN-OUTPUT-CLOSE***")
     exit(0)

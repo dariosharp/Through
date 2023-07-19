@@ -23,14 +23,22 @@ class Through:
         if platform.system() == "Linux" and pathlibraries[-1] != "/":
             return "{}/".format(pathlibraries)
         return pathlibraries
-    def idaalysis(self):
-        pass
-    def genIDB(self, list):
-        for l in list:
-            command = [
-                r"{}\{}".format(self.pathida,"idat.exe"),
-                "-B",
-                "-A",
-                l]
-            result = subprocess.run(command)
+    def execplugin(self, idb, plugin, *args):
+        command = [
+            "{}\\{}".format(self.pathida,"idat.exe"),
+            "-S\"plugin\\{}\" {}".format(plugin, " ".join(args)),
+            "-L\"{}.log\"".format(idb),
+            "-A",
+            idb]
+        process = subprocess.Popen(command)
+        process.wait()    
+    def genIDB(self, lib):
+        command = [
+            "{}\\{}".format(self.pathida,"idat.exe"),
+            "-B",
+            "-A",
+            lib]
+        process = subprocess.Popen(command)
+        process.wait()
+
         
