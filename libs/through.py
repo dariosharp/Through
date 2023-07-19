@@ -1,5 +1,6 @@
 import lief
 import platform
+import subprocess
 from libs.findfunctioninlib import FindFunctionInLibs
 
 
@@ -25,4 +26,12 @@ class Through:
     def idaalysis(self):
         pass
     def genIDB(self, list):
-        pass
+        for l in list:
+            #& "C:\Program Files\IDAPro\idat.exe" -B -A minconn.so
+            command = [
+                "{}\\{}".format(self.pathida,"idat.exe"),
+                "-B",
+                "-A",
+                l]
+            result = subprocess.run(command)
+        

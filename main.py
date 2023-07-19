@@ -24,6 +24,7 @@ def main(pathbinary, function, pathlibraries, ida):
         selectedLibs = sli.getList()
         for l in selectedLibs:
             logger.info("Selected Lib to analyze: \"{}\"".format(l))
+        #logger.info("Selected Lib to analyze: \"{}\"".format(l))
         through.genIDB(selectedLibs)
 
 
