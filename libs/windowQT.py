@@ -22,7 +22,7 @@ class SetPaths(QDialog):
         label = QLabel("Insert the IDApro PATH: (e.g. C:\\Program Files\\IDAPro)")
         layout.addWidget(label)
         line_edit = QLineEdit()
-        line_edit.setText("C:\\Program Files\\IDAPro\\IDAPro")
+        line_edit.setText("C:\\Program Files\\IDAPro")
         layout.addWidget(line_edit)
         self.input_fields.append(line_edit) 
         button = QPushButton("OK")

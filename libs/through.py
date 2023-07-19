@@ -27,9 +27,8 @@ class Through:
         pass
     def genIDB(self, list):
         for l in list:
-            #& "C:\Program Files\IDAPro\idat.exe" -B -A minconn.so
             command = [
-                "{}\\{}".format(self.pathida,"idat.exe"),
+                r"{}\{}".format(self.pathida,"idat.exe"),
                 "-B",
                 "-A",
                 l]

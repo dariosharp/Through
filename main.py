@@ -17,14 +17,18 @@ def main(pathbinary, function, pathlibraries, ida):
         libxfunction.append((f,l))
         logger.info("Found \"{}\" in \"{}\"".format(f, l))
     listlibs = list(map(lambda x: x[1], libxfunction))
-    for l in listlibs:
-        logger.info("Unique \"{}\"".format(l))
+    if listlibs == []:
+        logger.info("Among the libs available and imported by the binary do not use the function \"{}\"".format(function))
+        exit(0)
     if ida != None:
         sli = SelectLibsIDA(listlibs)
         selectedLibs = sli.getList()
         for l in selectedLibs:
             logger.info("Selected Lib to analyze: \"{}\"".format(l))
-        #logger.info("Selected Lib to analyze: \"{}\"".format(l))
+        if selectedLibs == []:
+            logger.info("You have no selected any library")
+            exit(0)
+        logger.info("IDB createtion.. it could take a while")
         through.genIDB(selectedLibs)
 
 
