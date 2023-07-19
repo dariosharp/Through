@@ -19,12 +19,6 @@ class SetPaths(QDialog):
         line_edit = QLineEdit()
         layout.addWidget(line_edit)
         self.input_fields.append(line_edit)
-        label = QLabel("Insert the IDApro PATH: (e.g. C:\\Program Files\\IDAPro)")
-        layout.addWidget(label)
-        line_edit = QLineEdit()
-        line_edit.setText("C:\\Program Files\\IDAPro")
-        layout.addWidget(line_edit)
-        self.input_fields.append(line_edit) 
         button = QPushButton("OK")
         button.clicked.connect(self.on_button_clicked)
         layout.addWidget(button)
@@ -35,8 +29,8 @@ class SetPaths(QDialog):
         self.accept()
 
     def getValues(self):
-        return self.input_values[0],self.input_values[1],self.input_values[2]
-
+        return self.input_values[0],self.input_values[1]
+    
 class PathIDA:
     def __init__(self):
         dialog = SetPaths()
