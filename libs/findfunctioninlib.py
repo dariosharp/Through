@@ -5,7 +5,9 @@ class Looking4Function:
     def __init__(self, function, plib):
         self.function = function
         lib = lief.parse(plib)
-        self.listFunctions = [f.name for f in lib.imported_functions]
+        self.listFunctions = []
+        if lib is not None:
+            self.listFunctions = [f.name for f in lib.imported_functions]
     def __iter__(self):
         return self
     def __next__(self):

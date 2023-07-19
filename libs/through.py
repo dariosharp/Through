@@ -1,4 +1,4 @@
-import lief
+import lief, time
 import platform
 import subprocess
 from libs.findfunctioninlib import FindFunctionInLibs
@@ -24,14 +24,9 @@ class Through:
             return "{}/".format(pathlibraries)
         return pathlibraries
     def execplugin(self, idb, plugin, *args):
-        command = [
-            "{}\\{}".format(self.pathida,"idat.exe"),
-            "-S\"plugin\\{}\" {}".format(plugin, " ".join(args)),
-            "-L\"{}.log\"".format(idb),
-            "-A",
-            idb]
-        process = subprocess.Popen(command)
-        process.wait()    
+        command = "{}\\{} -S\"{}\\{} {}\" -L\"{}.logs\" -A {}".format(self.pathida,"idat.exe","C:\\Users\\****\\Desktop\\works\\myplugin\\through\\plugin\\",
+                                                      plugin," ".join(args), idb, idb)
+        subprocess.call(command)
     def genIDB(self, lib):
         command = [
             "{}\\{}".format(self.pathida,"idat.exe"),
@@ -40,5 +35,7 @@ class Through:
             lib]
         process = subprocess.Popen(command)
         process.wait()
+        return process.returncode
+
 
         

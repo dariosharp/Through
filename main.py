@@ -27,13 +27,13 @@ def main(pathbinary, function, pathlibraries, ida):
             logger.info("Selected Lib to analyze: \"{}\"".format(l))
         if selectedLibs == []:
             logger.info("You have no selected any library")
-            exit(0)
+            ida_pro.qexit(0)
         for l in selectedLibs:
-            logger.info("IDB createtion for {}".format(l))
-            through.genIDB(l)
+            rv = through.genIDB(l)
+            logger.info("IDB createtion for {}, Return Values: {}".format(l, hex(rv)))
         for l in selectedLibs:
-            logger.info("IDB analysis for {}".format(l))
-            through.execplugin("{}.idb".format(l), "getexportedbyfunction.py", function)
+            rv = through.execplugin("{}.idb".format(l), "getexportedbyfunction.py", function)
+            logger.info("IDB analysis for {} Rerturn Value: {}".format(l, rv))
 
 
 if __name__ == "__main__":
