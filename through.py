@@ -19,8 +19,8 @@ class PluginThough(idaapi.plugin_t):
         wIDA = PathIDA()
         
         binary = os.path.basename((idaapi.get_input_file_path()))
-        function, libraries,pthida = wIDA.getValues()
-        m = Main(binary, function, libraries, pthida)
+        function, libraries = wIDA.getValues()
+        m = Main(binary, function, libraries, True)
         m.run()
 
     def term(self):

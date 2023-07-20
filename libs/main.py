@@ -23,7 +23,7 @@ class Main:
         def run(self):
             logger.debug("Binary: {} Function: {} Library path: {}".format(self.pathbinary, self.function, self.pathlibraries))
             logger.info("Extracting dipendencies from the binary")
-            analyzer = Analyzer(self.pathbinary,self.function,self.pathlibraries,self.ida)
+            analyzer = Analyzer(self.pathbinary,self.function,self.pathlibraries)
             libxfunction = []
             for f,l in analyzer.getFunctionPerLib():
                 libxfunction.append((f,l))
@@ -32,7 +32,7 @@ class Main:
             if listlibs == []:
                 logger.info("Among the libs available and imported by the binary do not use the function \"{}\"".format(self.function))
                 exit(0)
-            if self.ida != None:
+            if self.ida == True:
                 self._idaanalyis(analyzer,listlibs)
 
         def _idaanalyis(self, analyzer, listlibs):
@@ -53,8 +53,8 @@ class Main:
             for l in selectedLibs:
                 rowdata = analyzer.getResults("{}.idb".format(l))
                 if rowdata != None:
-                    reached_exp = reached_exp + [(l, eval(rowdata))]
-                    logger.info("{} {}".format(reached_exp[-1][0], str(reached_exp[-1][1])))
+                    logger.info("{} {}".format(l, str(rowdata)))
+                    reached_exp = reached_exp + [(l, rowdata)]
 
 
 if __name__ == "__main__":
