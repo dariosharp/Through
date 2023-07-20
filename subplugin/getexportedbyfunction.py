@@ -40,9 +40,16 @@ class GetExport:
                 if xstartaddr not in crossed_functions:
                     if xstartaddr not in self.addressExported:
                         return reachableExported + self._reachAnExport(xstartaddr, crossed_functions + [xstartname])
-                    reachableExported =  reachableExported + [(xstartname, hex(xstartaddr), hex(address))]
+                    args = "args:{}".format(self._getArgs(xstartaddr))
+                    reachableExported =  reachableExported + [(xstartname, args, hex(xstartaddr), hex(address))]
                     crossed_functions = crossed_functions + [xstartname]
         return reachableExported
+    def _getArgs(self, addr):
+            tif = ida_typeinf.tinfo_t()
+            funcdata = ida_typeinf.func_type_data_t()
+            ida_nalt.get_tinfo(tif, addr)
+            tif.get_func_details(funcdata)
+            return len([a for a in enumerate(funcdata)])
 
 if __name__ == '__main__':
     print("*****PLUGIN-START*****")

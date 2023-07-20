@@ -28,7 +28,6 @@ class Analyzer:
             "-B",
             "-A",
             lib]
-        print(command)
         process = subprocess.Popen(command)
         process.wait()
         return process.returncode
@@ -43,7 +42,6 @@ class Analyzer:
         command = ' '.join(command)
         subprocess.call(command)
     def getResults(self, idb):
-        print("{}.logs".format(idb))
         with open("{}.logs".format(idb), "r") as file:
             data = file.read()
         plugininfo = False

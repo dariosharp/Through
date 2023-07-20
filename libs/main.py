@@ -56,6 +56,12 @@ class Main:
                     data = eval(rowdata[0])
                     logger.info("{}: {}".format(l, data))
                     reached_exp = reached_exp + [(l, data)]
+            for l,functions in reached_exp:
+                for name, args, addr, faddr in functions:
+                    import idaapi
+                    if idaapi.get_name_ea(0, name) != 0xffffffff and args.split(":")[1] != "0":
+                        logger.info("[!!] Potential Match! {}: {}, exploitable at {}".format(l, name, faddr))
+                logger.info("Done")
 
 
 if __name__ == "__main__":
