@@ -48,7 +48,7 @@ class Analyzer:
             data = file.read()
         plugininfo = False
         prow = []
-        for row in data.split():
+        for row in data.split("\n"):
             if plugininfo == True:
                 if row == "*****PLUGIN-END*****":
                     return prow

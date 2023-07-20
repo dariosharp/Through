@@ -40,7 +40,7 @@ class GetExport:
                 if xstartaddr not in crossed_functions:
                     if xstartaddr not in self.addressExported:
                         return reachableExported + self._reachAnExport(xstartaddr, crossed_functions + [xstartname])
-                    reachableExported =  reachableExported + [(xstartname, xstartaddr, address)]
+                    reachableExported =  reachableExported + [(xstartname, hex(xstartaddr), hex(address))]
                     crossed_functions = crossed_functions + [xstartname]
         return reachableExported
 

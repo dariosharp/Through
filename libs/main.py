@@ -53,8 +53,9 @@ class Main:
             for l in selectedLibs:
                 rowdata = analyzer.getResults("{}.idb".format(l))
                 if rowdata != None:
-                    logger.info("{} {}".format(l, str(rowdata)))
-                    reached_exp = reached_exp + [(l, rowdata)]
+                    data = eval(rowdata[0])
+                    logger.info("{}: {}".format(l, data))
+                    reached_exp = reached_exp + [(l, data)]
 
 
 if __name__ == "__main__":
