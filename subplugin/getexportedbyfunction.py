@@ -1,6 +1,7 @@
 import idautils
 import idaapi
 import idc
+import ida_hexrays
 
 class GetXref:
     def __init__(self, address):
@@ -45,15 +46,17 @@ class GetExport:
                     crossed_functions = crossed_functions + [xstartname]
         return reachableExported
     def _getArgs(self, addr):
-            tif = ida_typeinf.tinfo_t()
-            funcdata = ida_typeinf.func_type_data_t()
-            ida_nalt.get_tinfo(tif, addr)
-            tif.get_func_details(funcdata)
-            return len([a for a in enumerate(funcdata)])
+        ida_hexrays.decompile(addr)
+        tif = ida_typeinf.tinfo_t()
+        funcdata = ida_typeinf.func_type_data_t()
+        ida_nalt.get_tinfo(tif, addr)
+        tif.get_func_details(funcdata)
+        return len([a for a in enumerate(funcdata)])
 
 if __name__ == '__main__':
-    print("*****PLUGIN-START*****")
     e = GetExport(idc.ARGV[1])
-    print(str(e.reachAnExport()))
+    results = str(e.reachAnExport())
+    print("*****PLUGIN-START*****")
+    print(results)
     print("*****PLUGIN-END*****")
     ida_pro.qexit(0)
