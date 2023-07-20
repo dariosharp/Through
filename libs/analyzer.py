@@ -34,7 +34,8 @@ class Analyzer:
         process.wait()
         return process.returncode
     def execplugin(self, idb, plugin, *args):
-        path2subplugin = "{}\\{}".format(os.path.dirname(os.getcwd()),"subplugin")
+        path2subplugin = "{}\\{}".format(self.pathida,"plugins\\subplugin")
+        #subprocess.call("rm {}.logs".format(idb))
         command = [
             "{}\\idat.exe".format(self.pathida),
             "-S\"{}\\{} {}\"".format(path2subplugin, plugin, " ".join(args)),
@@ -42,8 +43,10 @@ class Analyzer:
             "-A",
             idb]
         command = ' '.join(command)
+        print(command)
         subprocess.call(command)
     def getResults(self, idb):
+        print("{}.logs".format(idb))
         with open("{}.logs".format(idb), "r") as file:
             data = file.read()
         plugininfo = False

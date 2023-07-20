@@ -49,11 +49,12 @@ class Main:
             for l in selectedLibs:
                 rv = analyzer.execplugin("{}.idb".format(l), "getexportedbyfunction.py", self.function)
                 logger.info("IDB analysis for {} Rerturn Value: {}".format(l, rv))
+            reached_exp = []
             for l in selectedLibs:
                 rowdata = analyzer.getResults("{}.idb".format(l))
                 if rowdata != None:
                     reached_exp = reached_exp + [(l, eval(rowdata))]
-                logger.info("{} {}".format(reached_exp[-1][0], str(reached_exp[-1][1])))
+                    logger.info("{} {}".format(reached_exp[-1][0], str(reached_exp[-1][1])))
 
 
 if __name__ == "__main__":

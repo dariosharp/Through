@@ -17,10 +17,10 @@ class PluginThough(idaapi.plugin_t):
         from libs.main import Main
         from libs.windowQT import PathIDA
         wIDA = PathIDA()
-        binary, function, libraries = wIDA.getValues()
-        pathida = os.path.dirname(os.getcwd())
-        print(pathida)
-        m = Main(binary, function, libraries, pathida)
+        
+        binary = os.path.basename((idaapi.get_input_file_path()))
+        function, libraries,pthida = wIDA.getValues()
+        m = Main(binary, function, libraries, pthida)
         m.run()
 
     def term(self):
