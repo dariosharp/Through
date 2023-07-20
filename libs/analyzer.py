@@ -4,7 +4,7 @@ import subprocess
 from libs.findfunctioninlib import FindFunctionInLibs
 
 
-class Through:
+class Analyzer:
     def __init__(self, pathbinary, function, pathlibraries, pathida):
         self.binary = lief.parse(pathbinary)
         self.function = function
@@ -23,19 +23,41 @@ class Through:
         if platform.system() == "Linux" and pathlibraries[-1] != "/":
             return "{}/".format(pathlibraries)
         return pathlibraries
-    def execplugin(self, idb, plugin, *args):
-        command = "{}\\{} -S\"{}\\{} {}\" -L\"{}.logs\" -A {}".format(self.pathida,"idat.exe","{}\\{}".format(os.path.dirname(os.getcwd()),"subplugin"),
-                                                      plugin," ".join(args), idb, idb)
-        subprocess.call(command)
     def genIDB(self, lib):
         command = [
             "{}\\{}".format(self.pathida,"idat.exe"),
             "-B",
             "-A",
             lib]
+        print(command)
         process = subprocess.Popen(command)
         process.wait()
         return process.returncode
+    def execplugin(self, idb, plugin, *args):
+        path2subplugin = "{}\\{}".format(os.path.dirname(os.getcwd()),"subplugin")
+        command = [
+            "{}\\idat.exe".format(self.pathida),
+            "-S\"{}\\{} {}\"".format(path2subplugin, plugin, " ".join(args)),
+            "-L\"{}.logs\"".format(idb),
+            "-A",
+            idb]
+        command = ' '.join(command)
+        subprocess.call(command)
+    def getResults(self, idb):
+        with open("{}.logs".format(idb), "r") as file:
+            data = file.read()
+        plugininfo = False
+        prow = []
+        for row in data.split():
+            if plugininfo == True:
+                if row == "*****PLUGIN-END*****":
+                    return prow
+                prow = prow + [row]
+            if row == "*****PLUGIN-START*****":
+                plugininfo = True
+        return None
 
 
-        
+
+
+

@@ -19,6 +19,7 @@ class PluginThough(idaapi.plugin_t):
         wIDA = PathIDA()
         binary, function, libraries = wIDA.getValues()
         pathida = os.path.dirname(os.getcwd())
+        print(pathida)
         m = Main(binary, function, libraries, pathida)
         m.run()
 

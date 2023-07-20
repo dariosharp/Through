@@ -2,7 +2,8 @@
 
 
 import argparse, logging, platform
-from libs.through import Through
+from libs.analyzer import Analyzer
+from libs.windowQT import SelectLibsIDA
 
 
 logger = logging.getLogger('Logger')                
@@ -14,37 +15,45 @@ logger.addHandler(handler)
 
 
 class Main:
-        def __init__(self,pathbinary, function, pathlibraries, ida):
+        def __init__(self, pathbinary, function, pathlibraries, ida):
             self.pathbinary = pathbinary
             self.function = function
-            self.pathlibraries = pathbinary
+            self.pathlibraries = pathlibraries
             self.ida = ida
         def run(self):
             logger.debug("Binary: {} Function: {} Library path: {}".format(self.pathbinary, self.function, self.pathlibraries))
             logger.info("Extracting dipendencies from the binary")
-            through = Through(self.pathbinary,self.function,self.pathlibraries,self.ida)
+            analyzer = Analyzer(self.pathbinary,self.function,self.pathlibraries,self.ida)
             libxfunction = []
-            for f,l in through.getFunctionPerLib():
+            for f,l in analyzer.getFunctionPerLib():
                 libxfunction.append((f,l))
                 logger.info("Found \"{}\" in \"{}\"".format(f, l))
             listlibs = list(map(lambda x: x[1], libxfunction))
             if listlibs == []:
                 logger.info("Among the libs available and imported by the binary do not use the function \"{}\"".format(self.function))
-                ida_pro.qexit(0)
+                exit(0)
             if self.ida != None:
-                sli = SelectLibsIDA(listlibs)
-                selectedLibs = sli.getList()
-                for l in selectedLibs:
-                    logger.info("Selected Lib to analyze: \"{}\"".format(l))
-                if selectedLibs == []:
-                    logger.info("You have no selected any library")
-                    ida_pro.qexit(0)
-                for l in selectedLibs:
-                    rv = through.genIDB(l)
-                    logger.info("IDB createtion for {}, Return Values: {}".format(l, hex(rv)))
-                for l in selectedLibs:
-                    rv = through.execplugin("{}.idb".format(l), "getexportedbyfunction.py", self.function)
-                    logger.info("IDB analysis for {} Rerturn Value: {}".format(l, rv))
+                self._idaanalyis(analyzer,listlibs)
+
+        def _idaanalyis(self, analyzer, listlibs):
+            sli = SelectLibsIDA(listlibs)
+            selectedLibs = sli.getList()
+            for l in selectedLibs:
+                logger.info("Selected Lib to analyze: \"{}\"".format(l))
+            if selectedLibs == []:
+                logger.info("You have no selected any library")
+                exit(0)
+            for l in selectedLibs:
+                rv = analyzer.genIDB(l)
+                logger.info("IDB createtion for {}, Return Values: {}".format(l, hex(rv)))
+            for l in selectedLibs:
+                rv = analyzer.execplugin("{}.idb".format(l), "getexportedbyfunction.py", self.function)
+                logger.info("IDB analysis for {} Rerturn Value: {}".format(l, rv))
+            for l in selectedLibs:
+                rowdata = analyzer.getResults("{}.idb".format(l))
+                if rowdata != None:
+                    reached_exp = reached_exp + [(l, eval(rowdata))]
+                logger.info("{} {}".format(reached_exp[-1][0], str(reached_exp[-1][1])))
 
 
 if __name__ == "__main__":

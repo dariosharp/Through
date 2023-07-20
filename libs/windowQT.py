@@ -35,9 +35,9 @@ class PathIDA:
     def __init__(self):
         dialog = SetPaths()
         dialog.exec_()
-        self.function, self.libs, self.idapath = dialog.getValues()
+        self.function, self.libs = dialog.getValues()
     def getValues(self):
-        return os.path.basename((idaapi.get_input_file_path())), self.function, self.libs, self.idapath
+        return os.path.basename((idaapi.get_input_file_path())), self.function, self.libs
 
 
 class SelectorIDA(QDialog):
