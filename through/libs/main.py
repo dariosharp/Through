@@ -2,8 +2,8 @@
 
 
 import argparse, logging, platform
-from libs.analyzer import Analyzer, ExecSubPlugin
-from libs.windowQT import SelectLibsIDA
+from through.libs.analyzer import LibFilter, ExecSubPlugin
+from through.libs.windowQT import SelectLibsIDA
 
 
 logger = logging.getLogger('Logger')                
@@ -23,7 +23,7 @@ class Main:
         def run(self):
             logger.debug("Binary: {} Function: {} Library path: {}".format(self.pathbinary, self.function, self.pathlibraries))
             logger.info("Extracting dipendencies from the binary")
-            analyzer = Analyzer(self.pathbinary,self.function,self.pathlibraries)
+            analyzer = LibFilter(self.pathbinary,self.function,self.pathlibraries)
             libxfunction = []
             for f,l in analyzer.getFunctionPerLib():
                 libxfunction.append((f,l))
@@ -38,7 +38,7 @@ class Main:
                 for l in selectedLibs:
                     logger.info("Selected Lib to analyze: \"{}\"".format(l))
                 if selectedLibs == []:
-                    logger.info("You have no selected any library")
+                    logger.info("You have't selected any library")
                     exit(0)
                 self._idaanalyis(selectedLibs)
 

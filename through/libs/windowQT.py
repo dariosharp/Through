@@ -1,4 +1,4 @@
-import os, idaapi
+import os
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QLineEdit, QHBoxLayout, QListWidget
 

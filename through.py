@@ -14,8 +14,8 @@ class PluginThough(idaapi.plugin_t):
 
     def run(self, arg):
         import os
-        from libs.main import Main
-        from libs.windowQT import PathIDA
+        from through.libs.main import Main
+        from through.libs.windowQT import PathIDA
         wIDA = PathIDA()
         
         binary = os.path.basename((idaapi.get_input_file_path()))

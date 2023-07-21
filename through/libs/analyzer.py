@@ -1,10 +1,10 @@
-import lief, os
+import lief
 import platform
 import subprocess
-from libs.findfunctioninlib import FindFunctionInLibs
+from through.libs.findfunctioninlib import FindFunctionInLibs
 
 
-class Analyzer:
+class LibFilter:
     def __init__(self, pathbinary, function, pathlibraries):
         self.binary = lief.parse(pathbinary)
         self.function = function
@@ -38,7 +38,7 @@ class ExecSubPlugin:
     def execplugin(self, idb, plugin, *args):
         command = [
             "idat.exe",
-            "-S\"{}\\{} {}\"".format("plugins\\subplugin", plugin, " ".join(args)),
+            "-S\"{}\\{} {}\"".format("plugins\\through\\subplugin", plugin, " ".join(args)),
             "-L\"{}.logs\"".format(idb),
             "-A",
             idb]
