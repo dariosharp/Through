@@ -2,7 +2,7 @@
 
 
 import argparse, logging, platform
-from libs.analyzer import Analyzer
+from libs.analyzer import Analyzer, ExecSubPlugin
 from libs.windowQT import SelectLibsIDA
 
 
@@ -33,25 +33,26 @@ class Main:
                 logger.info("Among the libs available and imported by the binary do not use the function \"{}\"".format(self.function))
                 exit(0)
             if self.ida == True:
-                self._idaanalyis(analyzer,listlibs)
+                sli = SelectLibsIDA(listlibs)
+                selectedLibs = sli.getList()
+                for l in selectedLibs:
+                    logger.info("Selected Lib to analyze: \"{}\"".format(l))
+                if selectedLibs == []:
+                    logger.info("You have no selected any library")
+                    exit(0)
+                self._idaanalyis(selectedLibs)
 
-        def _idaanalyis(self, analyzer, listlibs):
-            sli = SelectLibsIDA(listlibs)
-            selectedLibs = sli.getList()
+        def _idaanalyis(self, selectedLibs):
+            execsubplg = ExecSubPlugin()
             for l in selectedLibs:
-                logger.info("Selected Lib to analyze: \"{}\"".format(l))
-            if selectedLibs == []:
-                logger.info("You have no selected any library")
-                exit(0)
-            for l in selectedLibs:
-                rv = analyzer.genIDB(l)
+                rv = execsubplg.genIDB(l)
                 logger.info("IDB createtion for {}, Return Values: {}".format(l, hex(rv)))
             for l in selectedLibs:
-                rv = analyzer.execplugin("{}.idb".format(l), "getexportedbyfunction.py", self.function)
+                rv = execsubplg.execplugin("{}.idb".format(l), "getexportedbyfunction.py", self.function)
                 logger.info("IDB analysis for {} Rerturn Value: {}".format(l, rv))
             reached_exp = []
             for l in selectedLibs:
-                rowdata = analyzer.getResults("{}.idb".format(l))
+                rowdata = execsubplg.getResults("{}.idb".format(l))
                 if rowdata != None:
                     data = eval(rowdata[0])
                     logger.info("{}: {}".format(l, data))

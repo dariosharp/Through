@@ -22,6 +22,10 @@ class Analyzer:
         if platform.system() == "Linux" and pathlibraries[-1] != "/":
             return "{}/".format(pathlibraries)
         return pathlibraries
+
+class ExecSubPlugin:
+    def __init__(self):
+        pass
     def genIDB(self, lib):
         command = [
             "{}".format("idat.exe"),
@@ -32,7 +36,6 @@ class Analyzer:
         process.wait()
         return process.returncode
     def execplugin(self, idb, plugin, *args):
-        #subprocess.call("rm {}.logs".format(idb))
         command = [
             "idat.exe",
             "-S\"{}\\{} {}\"".format("plugins\\subplugin", plugin, " ".join(args)),
