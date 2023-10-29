@@ -1,29 +1,35 @@
-# Define the library name
 MYLIB_NAME = mylib
+MYLIB_NAME_32 = mylib32
 
-# Define the program name
 PROGRAM_NAME = program
+PROGRAM_NAME_32 = program32
 
-# Compile the library source files into object files
-%.o: %.c
+$(MYLIB_NAME).o: $(MYLIB_NAME).c
 	gcc -fPIC -c $< -o $@
 
-# Link the object files into a shared library
+$(MYLIB_NAME_32).o: $(MYLIB_NAME).c
+	gcc -m32 -fPIC -c $< -o $@
+
 $(MYLIB_NAME).so: $(MYLIB_NAME).o
 	gcc -shared $(MYLIB_NAME).o -o $(MYLIB_NAME).so
 
-# Compile the program source files into object files
-%.o: %.c
-	gcc -c $< -o $@
+$(MYLIB_NAME_32).so: $(MYLIB_NAME_32).o
+	gcc -shared -m32 $(MYLIB_NAME_32).o -o $(MYLIB_NAME_32).so
 
-# Link the program object files with the library
+$(PROGRAM_NAME_32).o: $(PROGRAM_NAME).c
+	gcc -m32 -c $< -o $@
+
 $(PROGRAM_NAME): $(PROGRAM_NAME).o $(MYLIB_NAME).so
 	gcc $(PROGRAM_NAME).o -o $(PROGRAM_NAME) $(MYLIB_NAME).so
-	rm  $(PROGRAM_NAME).o $(MYLIB_NAME).o
+	rm $(PROGRAM_NAME).o $(MYLIB_NAME).o
 
-# Clean up the object files and library
+$(PROGRAM_NAME_32): $(PROGRAM_NAME_32).o $(MYLIB_NAME_32).so
+	gcc $(PROGRAM_NAME_32).o -o $(PROGRAM_NAME_32) -m32 $(MYLIB_NAME_32).so
+	rm $(PROGRAM_NAME_32).o $(MYLIB_NAME_32).o
+
 clean:
-	rm -f $(MYLIB_NAME).o $(MYLIB_NAME).so $(PROGRAM_NAME).o $(PROGRAM_NAME)
+	rm $(PROGRAM_NAME) $(MYLIB_NAME).so
+	rm $(PROGRAM_NAME_32) $(MYLIB_NAME_32).so
 
-# Default target
-all: $(PROGRAM_NAME)
+all: $(PROGRAM_NAME) $(PROGRAM_NAME_32)
+
