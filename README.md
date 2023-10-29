@@ -24,7 +24,10 @@ To use this tool, follow these simple installation steps:
    > cp -r .\through\through "C:\Program Files\IDA Pro\plugins"
    ```
 
-3. Restart IDA Pro to activate the tool.
+3. Install the requirements.
+   `> pip install -r requirements.txt`  
+
+4. Restart IDA Pro to activate the tool.
 
 ## Usage
 
