@@ -28,7 +28,7 @@ class Main:
             for f,l in self.analyzer.getFunctionPerLib():
                 libxfunction.append((f,l))
                 logger.info("Found \"{}\" in \"{}\"".format(f, l))
-            listlibs = list(map(lambda x: x[1], libxfunction))
+            listlibs = list(set(map(lambda x: x[1], libxfunction)))
             if listlibs == []:
                 logger.info("Among the libs available and imported by the binary do not use the function \"{}\"".format(self.function))
                 exit(0)
