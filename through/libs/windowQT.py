@@ -1,6 +1,6 @@
-import os
+import os, sys
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QLineEdit, QHBoxLayout, QListWidget
+from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QPushButton, QLineEdit, QHBoxLayout, QListWidget, QFileDialog
 
 class SetPaths(QDialog):
     def __init__(self):
@@ -18,9 +18,15 @@ class SetPaths(QDialog):
 
         label = QLabel("Insert the path to the libs: (e.g. C:\\Program File\\MyProgram\\Libs)")
         layout.addWidget(label)
-        line_edit1 = QLineEdit()
-        layout.addWidget(line_edit1)
-        self.input_fields.append(line_edit1)
+
+        lib_layout = QHBoxLayout()
+        self.line_edit_lib = QLineEdit()
+        lib_layout.addWidget(self.line_edit_lib)
+        self.input_fields.append(self.line_edit_lib)
+        self.select_directory_button = QPushButton("Select Directory", self)
+        lib_layout.addWidget(self.select_directory_button)
+        self.select_directory_button.clicked.connect(self.show_directory_dialog)
+        layout.addLayout(lib_layout)
 
         button = QPushButton("OK")
         button.clicked.connect(self.on_button_clicked)
@@ -34,8 +40,19 @@ class SetPaths(QDialog):
     def getValues(self):
         return self.input_values[0],self.input_values[1]
     
+    def show_directory_dialog(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.ShowDirsOnly
+
+        directory = QFileDialog.getExistingDirectory(
+            self, "Select Directory", options=options)
+
+        if directory:
+            self.line_edit_lib.setText(directory)
+    
 class PathIDA:
     def __init__(self):
+        #app = QApplication(sys.argv) 
         dialog = SetPaths()
         dialog.exec_()
         self.function, self.libs = dialog.getValues()
@@ -141,21 +158,7 @@ class SelectLibsIDA:
         self.list_selection.exec_()
     def getList(self):
         return self.list_selection.get_selected_elements()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    
+if __name__ == "__main__":
+    PathIDA()
