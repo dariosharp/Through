@@ -23,9 +23,9 @@ class Main:
         def run(self):
             logger.debug("Binary: {} Function: {} Library path: {}".format(self.pathbinary, self.function, self.pathlibraries))
             logger.info("Extracting dipendencies from the binary")
-            analyzer = LibFilter(self.pathbinary,self.function,self.pathlibraries)
+            self.analyzer = LibFilter(self.pathbinary,self.function,self.pathlibraries)
             libxfunction = []
-            for f,l in analyzer.getFunctionPerLib():
+            for f,l in self.analyzer.getFunctionPerLib():
                 libxfunction.append((f,l))
                 logger.info("Found \"{}\" in \"{}\"".format(f, l))
             listlibs = list(map(lambda x: x[1], libxfunction))
@@ -43,16 +43,16 @@ class Main:
                 self._idaanalyis(selectedLibs)
 
         def _idaanalyis(self, selectedLibs):
-            execsubplg = ExecSubPlugin()
+            execsubplg = ExecSubPlugin(self.analyzer.getArch())
             for l in selectedLibs:
                 rv = execsubplg.genIDB(l)
                 logger.info("IDB createtion for {}, Return Values: {}".format(l, hex(rv)))
             for l in selectedLibs:
-                rv = execsubplg.execplugin("{}.idb".format(l), "getexportedbyfunction.py", self.function)
+                rv = execsubplg.execplugin("{}".format(l), "getexportedbyfunction.py", self.function)
                 logger.info("IDB analysis for {} Rerturn Value: {}".format(l, rv))
             reached_exp = []
             for l in selectedLibs:
-                rowdata = execsubplg.getResults("{}.idb".format(l))
+                rowdata = execsubplg.getResults("{}".format(l))
                 if rowdata != None:
                     data = eval(rowdata[0])
                     logger.info("{}: {}".format(l, data))

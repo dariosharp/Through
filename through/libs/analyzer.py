@@ -22,30 +22,42 @@ class LibFilter:
         if platform.system() == "Linux" and pathlibraries[-1] != "/":
             return "{}/".format(pathlibraries)
         return pathlibraries
+    def getArch(self):
+        if self.binary.header.machine_type == lief.ELF.ARCH.x86_64:
+            return 64
+        return 32
+
 
 class ExecSubPlugin:
-    def __init__(self):
-        pass
+    def __init__(self, arch):
+        self.arch = arch
     def genIDB(self, lib):
         command = [
             "{}".format("idat.exe"),
             "-B",
             "-A",
             lib]
+        if self.arch == 64:
+            command = [
+                "{}".format("idat64.exe"),
+                "-B",
+                "-TELF64",
+                "-A",
+                lib]
         process = subprocess.Popen(command)
         process.wait()
         return process.returncode
     def execplugin(self, idb, plugin, *args):
         command = [
-            "idat.exe",
+            "{}.exe".format("idat64" if self.arch == 64 else "idat" ),
             "-S\"{}\\{} {}\"".format("plugins\\through\\subplugin", plugin, " ".join(args)),
-            "-L\"{}.logs\"".format(idb),
+            "-L\"{}.{}.logs\"".format(idb, "i64" if self.arch == 64 else "idb"),
             "-A",
             idb]
         command = ' '.join(command)
         subprocess.call(command)
     def getResults(self, idb):
-        with open("{}.logs".format(idb), "r") as file:
+        with open("{}.{}.logs".format(idb, "i64" if self.arch == 64 else "idb"), "r") as file:
             data = file.read()
         plugininfo = False
         prow = []
