@@ -25,9 +25,10 @@ To use this tool, follow these simple installation steps:
    ```
 
 3. Install the requirements.
+   
    `> pip install -r requirements.txt`  
 
-4. Restart IDA Pro to activate the tool.
+5. Restart IDA Pro to activate the tool.
 
 ## Usage
 
