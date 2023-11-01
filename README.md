@@ -40,7 +40,7 @@ To use this tool, follow these simple installation steps:
 
 ## Example
 
-Suppose you have a binary and you want to identify which libraries call the `system` function. This tool can help you discover which function of the binary in analysis call an function of the a library that call a `system`.
+Suppose you have a binary and you want to identify which libraries call the `system` function. This tool can help you discover which function of the binary in analysis call an function of a library that call a `system`.
 
 Compile the examples:
 ```
