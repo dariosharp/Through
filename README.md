@@ -51,7 +51,7 @@ Then open using IDA 64 the binary `program`, or using IDA 32 the binary `program
 
 Now in IDA run the plugin, pass as library folder `through/test` and look for `system`!
 
-[Example](https://github.com/dariosharp/through/assets/14238348/7a945738-1758-456e-af8a-32103564040b)
+[Example.webm](https://github.com/dariosharp/through/assets/14238348/9cddb8e4-e3ff-45a6-84cc-77a8cfc36b08)
 
 
 
