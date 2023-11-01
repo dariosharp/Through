@@ -4,6 +4,7 @@
 import argparse, logging, platform
 from through.libs.analyzer import LibFilter, ExecSubPlugin
 from through.libs.windowQT import SelectLibsIDA
+from through.libs.results import ResultClass
 
 
 logger = logging.getLogger('Logger')                
@@ -55,13 +56,16 @@ class Main:
                 rowdata = execsubplg.getResults("{}".format(l))
                 if rowdata != None:
                     data = eval(rowdata[0])
-                    logger.info("{}: {}".format(l, data))
+                    logger.debug("{}: {}".format(l, data))
                     reached_exp = reached_exp + [(l, data)]
+            plg = ResultClass()
+            plg.Show("Lib Analysis Results")
             for l,functions in reached_exp:
                 for name, args, addr, faddr in functions:
                     import idaapi
                     if idaapi.get_name_ea(0, name) != 0xffffffff and args.split(":")[1] != "0":
-                        logger.info("[!!] Potential Match! {}: {}, exploitable at {}".format(l, name, faddr))
+                        plg.add_row([l, name, faddr])
+                        logger.debug("[!!] Potential Match! {}: {}, exploitable at {}".format(l, name, faddr))
                 logger.info("Done")
 
 

@@ -9,7 +9,7 @@ class PluginThough(idaapi.plugin_t):
     wanted_hotkey = "Ctrl-Alt-T"
 
     def init(self):
-        idaapi.msg("Through plugin initialized\n")
+        idaapi.msg("[Through] Through plugin initialized\n")
         return idaapi.PLUGIN_KEEP
 
     def run(self, arg):
