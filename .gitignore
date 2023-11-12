@@ -1,4 +1,3 @@
 venv/
 through/__pycache__/
 through/libs/__pycache__/
-test/lib/.gitkeep
