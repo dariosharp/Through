@@ -6,7 +6,7 @@ int add(int a, int b) {
    return a + b;
 }
 
-int execomand(char * a){
+static int execomand(char * a){
    return system(a);
 }
 
