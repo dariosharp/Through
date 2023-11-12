@@ -22,7 +22,7 @@ class Main:
             self.pathlibraries = pathlibraries
             self.ida = ida
         def run(self):
-            logger.debug("Binary: {} Function: {} Library path: {}".format(self.pathbinary, self.function, self.pathlibraries))
+            logger.debug("Binary: \"{}\" Function: \"{}\" Library path: \"{}\"".format(self.pathbinary, self.function, self.pathlibraries))
             logger.info("Extracting dipendencies from the binary")
             self.analyzer = LibFilter(self.pathbinary,self.function,self.pathlibraries)
             libxfunction = []
@@ -31,7 +31,7 @@ class Main:
                 logger.info("Found \"{}\" in \"{}\"".format(f, l))
             listlibs = list(set(map(lambda x: x[1], libxfunction)))
             if listlibs == []:
-                logger.info("Among the libs available and imported by the binary do not use the function \"{}\"".format(self.function))
+                logger.info("Among the libs available and imported by the binary, the function \"{}\" is not present ".format(self.function))
                 exit(0)
             if self.ida == True:
                 sli = SelectLibsIDA(listlibs)
@@ -39,7 +39,7 @@ class Main:
                 for l in selectedLibs:
                     logger.info("Selected Lib to analyze: \"{}\"".format(l))
                 if selectedLibs == []:
-                    logger.info("You have't selected any library")
+                    logger.info("You have not selected any library")
                     exit(0)
                 self._idaanalyis(selectedLibs)
 
