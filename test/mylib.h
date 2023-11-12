@@ -3,5 +3,5 @@
 int add(int a, int b);
 int parser(char* cmd);
 char* copy(char* string);
-int* move(int* data);
+char* move(char* data);
 #endif

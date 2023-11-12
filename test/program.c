@@ -5,11 +5,15 @@
 
 
 int main(int argc, char *argv[]) {
-   int opt;
-   
+   int opt;   
+   char * result;
 	while ((opt = getopt(argc, argv, "hapcm")) != EOF) {
-      switch (opt) {
-         case 'p':
+    	switch (opt) {
+        	case 'p':
+				if (argc < 3){
+					printf("Error: not enough arguments\n");
+					return 1;
+				}
 				if (parser(argv[2]) == 0){
 					printf("Command Executied with success\n");
 					return 0;
@@ -23,13 +27,23 @@ int main(int argc, char *argv[]) {
             printf("%i + %i = %i\n",a,b,add(a,b));
             break;
          case 'c':
-				copy(argv[2]);
+				if (argc < 3){
+					printf("Error: not enough arguments\n");
+					return 1;
+				}
+				result  = copy(argv[2]);
+				printf("Here the copied value: %s\n", result);
             break;
          case 'm':
-				move((int *)argv[2]);
+				if (argc < 3){
+					printf("Error: not enough arguments\n");
+					return 1;
+				}			
+				result = move(argv[2]);
+				printf("Here the moved value: %s\n", result);
             break;
-         case 'v': 
-       default:
+       	case 'v': 
+		default:
 			printf("Usage: %s [-hapcm]\n", argv[0]);
 			printf("\t -a: add two numbers\n");
 			printf("\t -p: check a string\n");

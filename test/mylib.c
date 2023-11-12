@@ -20,11 +20,15 @@ int parser(char* a){
 }
 
 char * copy(char* string){
-   return string;
+	char *destination = malloc(strlen(string) * sizeof(char));
+	strcpy(destination, string);	
+   return destination;
 }
 
-int* move(int* data){
-   return data;
+char * move(char* data){
+	char *destination = malloc(strlen(data) * sizeof(char));
+	memmove(destination, data, strlen(data) + 1);
+   return destination;
 }
 
 
