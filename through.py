@@ -20,6 +20,8 @@ class PluginThough(idaapi.plugin_t):
         
         binary = os.path.basename((idaapi.get_input_file_path()))
         function, libraries = wIDA.getValues()
+        if function == None or libraries == None:
+            return
         m = Main(binary, function, libraries, True)
         m.run()
 

@@ -7,6 +7,7 @@ class SetPaths(QDialog):
         super(SetPaths, self).__init__()
         self.setWindowTitle("Set Paths")
         layout = QVBoxLayout()
+        self.input_values = []
         self.input_fields = []
 
         label = QLabel("Insert the function are you looking for: (e.g. system)")
@@ -38,7 +39,10 @@ class SetPaths(QDialog):
         self.accept()
 
     def getValues(self):
+        if self.input_values == []:
+            return None,None
         return self.input_values[0],self.input_values[1]
+
     
     def show_directory_dialog(self):
         options = QFileDialog.Options()

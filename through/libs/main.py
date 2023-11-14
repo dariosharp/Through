@@ -32,7 +32,7 @@ class Main:
             listlibs = list(set(map(lambda x: x[1], libxfunction)))
             if listlibs == []:
                 logger.info("Among the libs available and imported by the binary, the function \"{}\" is not present ".format(self.function))
-                exit(0)
+                return
             if self.ida == True:
                 sli = SelectLibsIDA(listlibs)
                 selectedLibs = sli.getList()
@@ -40,7 +40,7 @@ class Main:
                     logger.info("Selected Lib to analyze: \"{}\"".format(l))
                 if selectedLibs == []:
                     logger.info("You have not selected any library")
-                    exit(0)
+                    return
                 self._idaanalyis(selectedLibs)
 
         def _idaanalyis(self, selectedLibs):
